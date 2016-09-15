@@ -1,0 +1,67 @@
+
+<html>
+<head>
+  <title>Fehr & Peers Office Locations</title>
+  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/>
+  <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+  <script src="https://code.jquery.com/jquery-2.1.1.js"></script>  
+</head>
+<body>
+  <style>
+    body{
+        padding:0;
+        margin:0;
+        }
+    #map{ height: 55%;}
+.leaflet-popup-content-wrapper,.leaflet-popup-content
+ {
+   -webkit-border-radius: 0 !important;
+   -moz-border-radius: 0 !important;
+    border-radius: 0 !important;
+ }
+
+    h1 {color:#2D2D2C;
+        font-family: Century Gothic,CenturyGothic,AppleGothic,sans-serif;
+        font-weight: bold;
+        font-size: 16px;
+        margin-top: 0px;
+        margin-bottom: -15px;
+        }
+    p {color:#2D2D2C;
+        font-family: Century Gothic,CenturyGothic,AppleGothic,sans-serif;
+        font-size: 12px;
+        }           
+  </style>
+  <div align="left" style="height:10%">
+	<img class="displayed" src="http://www.fehrandpeers.com/wp-content/uploads/2014/08/FPLogoWeb.png"/>
+  </div> 
+  <div id="map"></div>
+  <div style="height:10%; background-color:#46763A"></div> 
+  <script>
+  // initialize the map
+  var map = L.map('map').setView([41, -100], 5);
+  // load a tile layer
+
+  L.tileLayer('https://api.mapbox.com/styles/v1/brandonhaydu/cit25mp6o00482wsprca4d5t9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYnJhbmRvbmhheWR1IiwiYSI6IjYwZmJjZjg1YWZhYmE5ZGMyNzc3NzE2OGJmZWEzMDVmIn0.l8OVA-pD1Mn0A4A-C9A0oQ', {minZoom:5,
+  maxZoom: 20,
+  attribution: '<a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> | <a href="https://www.mapbox.com/about/maps/">Mapbox</a> | <a href="http://www.fehrandpeers.com/">Fehr&Peers</a>'
+  }).addTo(map);
+
+  $.getJSON("offices.geojson",function(data){
+    var myIcon = L.icon({
+    iconUrl: 'FP.svg',
+    iconSize: [21.9, 32.2],
+    iconAnchor: [10.95, 32.2],
+    });
+
+var offices = L.geoJson(data,{
+    pointToLayer: function(feature,latlng){
+    var marker = L.marker(latlng,{icon: myIcon});
+      marker.bindPopup('<h1>' + feature.properties.Office + '</h1><p>' + feature.properties.Address + '<br>' + feature.properties.Address2 + '<br>' + feature.properties.City_State + '<br>' + feature.properties.Phone + '<br>' + feature.properties.Fax + '</p>');
+      return marker;
+    }
+  }).addTo(map);
+});  
+  </script>
+</body>
+</html>
